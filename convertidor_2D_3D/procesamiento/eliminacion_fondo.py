@@ -3,7 +3,6 @@ import shutil
 from rembg import remove
 
 def quitar_fondo(carpeta_origen, carpeta_destino):
-
     if os.path.exists(carpeta_destino):
         shutil.rmtree(carpeta_destino)
     os.makedirs(carpeta_destino, exist_ok=True)
