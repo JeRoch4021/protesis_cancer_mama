@@ -165,7 +165,8 @@ class ModeloPantalla:
     # Metodo para activar la IA de clasificacion de imagenes
     def activar_clasificador(self):
         if self.modelo_ia is None:
-            self.modelo_ia = YOLO('protesis_cancer_mama/detector_objetos_yolov11/runs/detect/train22/weights/best.pt')
+            #self.modelo_ia = YOLO('protesis_cancer_mama/detector_objetos_yolov11/runs/detect/train22/weights/best.pt')
+            self.modelo_ia = YOLO('protesis_cancer_mama/DetectorObjetosCANMA/Modelo-Feb2026/runs/cancer/train_v1/weights/best.pt')
         self.clasificando = True
         print("Clasificador activado.")
 
