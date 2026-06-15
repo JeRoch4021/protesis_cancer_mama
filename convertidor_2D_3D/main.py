@@ -1,3 +1,4 @@
+# Librerías utilizadas para el archivo
 import os
 from procesamiento.eliminacion_fondo import quitar_fondo
 from procesamiento.escalado import escalar_imagenes

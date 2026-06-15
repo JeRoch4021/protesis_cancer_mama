@@ -32,7 +32,7 @@ def reconstruir_modelo_colmap(ruta_imagenes, ruta_proyecto, limpiar = True):
         print()
         shutil.rmtree(ruta_proyecto) # Se borra carpeta completa y su contenido
 
-    # Crea las carpetas necasarias si no existen (evita errores de ruta)
+    # Crea las carpetas necesarias si no existen (evita errores de ruta)
     os.makedirs(ruta_sparse, exist_ok=True)
     os.makedirs(ruta_dense, exist_ok=True)
 
@@ -56,39 +56,44 @@ def reconstruir_modelo_colmap(ruta_imagenes, ruta_proyecto, limpiar = True):
         "--SiftMatching.guided_matching", "1"    # Usa la geometría para rescatar puntos perdidos
     ])
 
-    # 3. Reconstrucción Estructura desde Movimiento (SfM)
+    # Comando 3. Reconstrucción de Dispersión (SfM)
+    # Crea la estructura inicial (nube de puntos base) y determina la posición de la cámara
     ejecutar_comando([
         "colmap", "mapper",
         "--database_path", ruta_db,
         "--image_path", ruta_imagenes,
-        "--output_path", ruta_sparse
+        "--output_path", ruta_sparse # Guarda los archivos .bin de la cámara y puntos
     ])
 
-    # 4. Preparar para reconstrucción densa
+    # Comando 4. Corrección de imagen (Undistorter)
+    # Eliminar la distorsión del lente de las fotos para la frase densa
     ejecutar_comando([
         "colmap", "image_undistorter",
         "--image_path", ruta_imagenes,
-        "--input_path", os.path.join(ruta_sparse, "0"),
+        "--input_path", os.path.join(ruta_sparse, "0"), # Toma el primer modelo generado
         "--output_path", ruta_dense,
-        "--output_type", "COLMAP"
+        "--output_type", "COLMAP" # Formato de salida compatible con el siguiente paso
     ])
 
-    # 5. Reconstrucción densa (depth maps)
+    # Comando 5. Estéreo de parches (Dense reconstrucción)
+    # Calcula la profundidad píxel por píxel para rellenar los huecos del modelo
     ejecutar_comando([
         "colmap", "patch_match_stereo",
         "--workspace_path", ruta_dense,
         "--workspace_format", "COLMAP",
-        "--PatchMatchStereo.geom_consistency", "true"
+        "--PatchMatchStereo.geom_consistency", "true" # Asegura que los puntos sean coherentes en 3D
     ])
 
-    # 6. Fusión de profundidad
+    # Comando 6. Fusión de profundidad
+    # Une todos los mapas de profundidad en una sola nube de puntos dense (.ply)
     ejecutar_comando([
         "colmap", "stereo_fusion",
         "--workspace_path", ruta_dense,
         "--workspace_format", "COLMAP",
-        "--input_type", "geometric",
-        "--output_path", os.path.join(ruta_dense, "fused.ply")
+        "--input_type", "geometric", # Filtrar puntos ruidosos basándose en geometría
+        "--output_path", os.path.join(ruta_dense, "fused.ply") # Archivo final de la nube
     ])
-
+    
+    # Mensajes finales de confirmación
     print("Reconstrucción completa. ")
     print("Modelo guardado en:", os.path.join(ruta_dense, "fused.ply"))
