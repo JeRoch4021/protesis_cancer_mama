@@ -112,7 +112,7 @@ class ModeloPantalla:
 
     # Metodo para activar la grabacion del video y guardar el video en la carpeta del proyecto (Videos_grabados)
     def iniciar_grabacion(self):
-        ruta = "protesis_cancer_mama/interfaz_grafica/Videos_grabados"
+        ruta = "interfaz_grafica/Videos_grabados"
         os.makedirs(ruta, exist_ok=True)
 
         # Generar un nombre único para el video basado en la cantidad de videos existentes en la carpeta
@@ -144,7 +144,7 @@ class ModeloPantalla:
     # Metodo para guardar cada frame del video en la carpeta del proyecto (Imagenes_capturas)
     # El parametro "salto" indica cada cuantos frames se guardara una imagen, por ejemplo, si salto=30, se guardara una imagen cada 30 frames del video.
     def extraer_frames(self, ruta_video, salto=30): 
-        ruta_salida = "protesis_cancer_mama/interfaz_grafica/Imagenes_capturas"
+        ruta_salida = "interfaz_grafica/Imagenes_capturas"
         os.makedirs(ruta_salida, exist_ok=True)
         cap = cv2.VideoCapture(ruta_video)
         contador = 0
@@ -166,7 +166,7 @@ class ModeloPantalla:
     def activar_clasificador(self):
         if self.modelo_ia is None:
             #self.modelo_ia = YOLO('protesis_cancer_mama/detector_objetos_yolov11/runs/detect/train22/weights/best.pt')
-            self.modelo_ia = YOLO('protesis_cancer_mama/DetectorObjetosCANMA/Modelo-Feb2026/runs/cancer/train_v1/weights/best.pt')
+            self.modelo_ia = YOLO('DetectorObjetosCANMA/Modelo-Feb2026/runs/cancer/train_v1/weights/best.pt')
         self.clasificando = True
         print("Clasificador activado.")
 
@@ -177,6 +177,6 @@ class ModeloPantalla:
 
     def seleccionar_video(self):
         # Abrir un cuadro de diálogo para seleccionar un video en la carpeta del proyecto (Videos_grabados)
-        ruta_video = filedialog.askopenfilename(initialdir="protesis_cancer_mama/interfaz_grafica/Videos_grabados", title="Seleccionar video", filetypes=(("Archivos de video", "*.avi;*.mp4"), ("Todos los archivos", "*.*")))
+        ruta_video = filedialog.askopenfilename(initialdir="interfaz_grafica/Videos_grabados", title="Seleccionar video", filetypes=(("Archivos de video", "*.avi;*.mp4"), ("Todos los archivos", "*.*")))
         if ruta_video:
             self.extraer_frames(ruta_video)  
