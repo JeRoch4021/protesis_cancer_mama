@@ -9,7 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 3. Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-tk \
-    libgl1-mesa-glx \
+    libgl1 \
+    libglx-mesa0 \
     libglib2.0-0 \
     libgomp1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -19,7 +20,7 @@ WORKDIR /app
 
 # 5. Instalar dependencias limpias en python
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # 6. Mantener el contenedor vivo en segundo plano esperando los comandos
 CMD ["tail", "-f", "/dev/null"]

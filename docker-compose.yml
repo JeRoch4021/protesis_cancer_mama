@@ -10,12 +10,13 @@ services:
     container_name: canma_app
     restart: unless-stopped
     environment:
-      - DISPLAY=host.docker.internal:0
+      - DISPLAY=:0
       - QT_QPA_PLATFORM=offscreen
     volumes:
       - .:/app
-    devices:
-      - /dev/video0:/dev/video0
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    #devices:
+      #- /dev/video0:/dev/video0
     command: tail -f /dev/null
     depends_on:
       - colmap_worker

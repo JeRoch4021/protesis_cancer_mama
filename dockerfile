@@ -17,6 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Instalar herramientas de compilación y dependencias de COLMAP
 RUN apt-get update && \
     apt-get install -y \
+        git \
         ccache \
         cmake \
         ninja-build \
@@ -47,7 +48,7 @@ RUN apt-get update && \
 RUN mkdir -p /usr/include/opencv4
 
 # Copiar el código fuente de COLMAP al contenedor
-COPY . /colmap
+RUN git clone https://github.com/colmap/colmap.git /colmap
 
 # Compilar e instalar COLMAP en una carpeta temporal
 RUN cd /colmap && \
@@ -59,7 +60,7 @@ RUN cd /colmap && \
         -DCMAKE_INSTALL_PREFIX=/colmap-install \
         -DFETCHCONTENT_FULLY_DISCONNECTED=${FETCHCONTENT_FULLY_DISCONNECTED} \
         -DBLA_VENDOR=Intel10_64lp && \
-    ninja install
+    ninja install -j 2
 
 # Etapa intermedia para exportar la caché de compilación en procesos CI (opcional)
 FROM scratch AS cache-export
