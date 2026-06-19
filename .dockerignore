@@ -1,0 +1,20 @@
+# Ignorar entorno vitual local de python
+venv/
+.venv/
+env/
+
+# Ignorar archivos ocultos de VS Code e historial
+.vscode/
+.git/
+.gitignore
+
+# Ignorar imagenes locales de prueba y resultados previos para no saturar el contenedor
+**/imagenes_reescaladas/
+**/imagenes_sin_fondo/
+**/modelo_3D/dense/
+**/modelo_3D/sparse/
+
+# Archivos temporales de python
+**/__pycache__/
+*.pyc
+*.pyo
