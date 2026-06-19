@@ -23,14 +23,18 @@ class ModeloPantalla:
         self.slider_umbral_bajo = None
         self.lblVideo = None
 
+        self.camara_activa = False
         self.grabando = False
         self.guardando_frames = False
         self.clasificando = False
         self.video_writer = None
         self.modelo_ia = None
 
-    #Creamos el metodo visualizar para activar los fitros de la camara de video de nuestro dispositivo
+    # Creamos el metodo visualizar para activar los fitros de la camara de video de nuestro dispositivo
     def visualizar(self):
+        if not self.camara_activa:
+            return
+
         if self.camara is not None:
             validar, self.frame = self.camara.read()
             if validar == True:
@@ -73,13 +77,30 @@ class ModeloPantalla:
                 #Mostramos en la pantalla la camara de video
                 self.lblVideo.configure(image=imagen_a_video)
                 self.lblVideo.image = imagen_a_video
-                self.lblVideo.after(10, self.visualizar)
+
+                if self.camara_activa:
+                    self.lblVideo.after(10, self.visualizar)
             else:
                 self.camara.release()
 
-    #Creamos un metodo para activar la camara del disposiitivo
+    #Creamos un metodo para activar la camara 
     def activar_camara(self):
-        self.camara = cv2.VideoCapture(0)
+        # Abrir camara del dispositivo si no se conecta otra camara externa
+        self.camara_activa = True
+        for i in range(1, 5):
+            cap = cv2.VideoCapture(i)
+            if cap.isOpened():
+                ret, frame = cap.read()
+                
+                if ret:
+                    self.camara = cap
+                    break
+
+            cap.release()
+
+        if self.camara is None:
+            self.camara = cv2.VideoCapture(0)
+        
         self.lblVideo = tk.Label(self.pantalla)
         self.lblVideo.place(x=345, y=60)
         self.visualizar()
@@ -87,9 +108,12 @@ class ModeloPantalla:
 
     #Creamos un metodo para deactivar la camara del dispositivo
     def desactivar_camara(self):
-        self.camara.release()
-        cv2.destroyAllWindows()
-        self.lblVideo.destroy()
+        self.camara_activa = False
+        if self.camara is not None:
+            self.camara.release()
+            self.camara = None
+        if self.lblVideo.winfo_exists():
+            self.lblVideo.destroy()
         print("Fin")
 
     #Creamos un metodo para cambiar la imagen de video a un filtro rgb

@@ -34,6 +34,9 @@ class ControladorPantalla:
         self.vista.boton_iniciar_grabacion.config(state=tk.NORMAL)
         self.vista.boton_ia.config(state=tk.NORMAL)
         self.vista.boton_detener_grabacion.config(state=tk.DISABLED)
+        self.vista.boton_rgb.config(state=tk.NORMAL)
+        self.vista.boton_grises.config(state=tk.NORMAL)
+        self.vista.boton_canny.config(state=tk.NORMAL)
         self.modelo.activar_camara()
 
     def desactivar_camara(self):
@@ -41,7 +44,11 @@ class ControladorPantalla:
         self.vista.boton_inicio.config(state=tk.NORMAL)
         self.vista.boton_iniciar_grabacion.config(state=tk.DISABLED)
         self.vista.boton_ia.config(state=tk.DISABLED)
-        self.modelo.desactivar_camara()
+        self.vista.boton_detener_grabacion.config(state=tk.DISABLED)
+        self.vista.boton_rgb.config(state=tk.DISABLED)
+        self.vista.boton_grises.config(state=tk.DISABLED)
+        self.vista.boton_canny.config(state=tk.DISABLED)
+        self.modelo.desactivar_camara() 
 
     def iniciar_grabacion(self):
         self.vista.boton_iniciar_grabacion.config(state=tk.DISABLED)
