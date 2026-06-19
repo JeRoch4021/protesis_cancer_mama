@@ -2,27 +2,26 @@
 
 ## Comandos para ejecutar el contenedor de docker
 
-#### Ejecutar una imagen para el contenedor
+#### Crear una imagen para la aplicación de Python
 ```
-docker build --platform=linux/amd64 -t jeshuarocha/canma:{VERSION!} .
+docker build -f Dockerfile.app -t canma_app:{VERSION!} .
 ```
 
-#### Respaldar la imagen en la nube de DockerHub
-
+#### Crear una imagen para el motor COLMAP
 ```
-docker push jeshuarocha/canma:{VERSION!}
+docker build --target runtime -t colmap_worker:{VERSION!} .
 ```
 
 #### Correr el contenedor de docker
 
 ```
-docker run -d --name canma_container -e DISPLAY=host.docker.internal:0 -v "$(pwd)":/app jeshuarocha/canma:{VERSION!} tail -f /dev/null
+docker compose up -d
 ```
 
 #### Ingresar dentro del contenedor de docker
 
 ```
-docker exec -it canma_container /bin/bash
+docker compose exec app bash
 ```
 
 ## Comandos para probar código dentro del contenedor en Mac
