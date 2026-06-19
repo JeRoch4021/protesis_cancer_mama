@@ -7,16 +7,16 @@ from fotogrametria.motor_colmap import reconstruir_modelo_colmap
 # ----------- USO ------------
 if __name__ == "__main__":
     directorio_base = os.getcwd()
-    fotos_originales = os.path.join(directorio_base, "imagenes")
-    fotos_sin_fondo = os.path.join(directorio_base, "imagenes_sin_fondo")
-    fotos_reescaladas = os.path.join(directorio_base, "imagenes_reescaladas")
+    fotos_originales = os.path.join(directorio_base, "interfaz_grafica", "Imagenes_capturas")
+    fotos_sin_fondo = os.path.join(directorio_base, "convertidor_2D_3D", "imagenes_sin_fondo")
+    fotos_reescaladas = os.path.join(directorio_base, "convertidor_2D_3D", "imagenes_reescaladas")
 
     quitar_fondo(fotos_originales, fotos_sin_fondo)
     escalar_imagenes(fotos_sin_fondo, fotos_reescaladas)
 
     reconstruir_modelo_colmap(
         ruta_imagenes = fotos_reescaladas,
-        ruta_proyecto = ".\\modelo_3D"
+        ruta_proyecto = os.path.join(directorio_base, "convertidor_2D_3D", "modelo_3D")
     )
 
     # # Convertir nube de puntos a malla STL

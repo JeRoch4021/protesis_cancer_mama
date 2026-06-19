@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Aplicación de Python (Interfaz Grafica, Tkinter y OpenCV)
+  app:
+    image: canma_app:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: canma_app
+    restart: unless-stopped
+    environment:
+      - DISPLAY=host.docker.internal:0
+      - QT_QPA_PLATFORM=offscreen
+    volumes:
+      - .:/app
+    devices:
+      - /dev/video0:/dev/video0
+    command: tail -f /dev/null
+    depends_on:
+      - colmap_worker
+
+  # El motor de procesamiento COLMAP con soporte CUDA (NVIDIA)
+  colmap_worker:
+    image: colmap_worker:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: colmap_worker
+    environment:
+      - QT_QPA_PLATFORM=offscreen
+    volumes:
+      - .:/app
+    working_dir: /app
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: tail -f /dev/null
+              
